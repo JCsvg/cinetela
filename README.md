@@ -3,18 +3,6 @@
 App de cinema completo: o cliente escolhe filme, sessão e assentos, pede lanchonete e paga; o gerente cuida do
 próprio cinema; o administrador tem controle total.
 
-## Ficha técnica
-
-| | |
-|---|---|
-| **Linguagens** | PHP (back, 33 arquivos, cerca de 3 000 linhas), TypeScript e TSX (front, 63 arquivos, cerca de 3 900 linhas), SQL (banco, 219 linhas) |
-| **Back** | PHP 8.4 puro, sem framework: API JSON com 39 rotas, PDO e Composer só para o autoload |
-| **Banco** | PostgreSQL 18, com 10 tabelas |
-| **Front** | React 19, TypeScript 6, Tailwind 4, Vite 8 e React Router 8 |
-| **Infra** | Docker Compose, com três containers (banco, API e front) |
-| **Papéis** | visitante, cliente, gerente de cinema e administrador |
-| **Autenticação** | token aleatório (Bearer) guardado no banco, com validade de 7 dias |
-
 ## Descrição
 
 Cada parte roda no seu container, e o `docker-compose.yml` liga as três:
