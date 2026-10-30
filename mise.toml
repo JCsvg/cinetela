@@ -1,0 +1,50 @@
+[tools]
+node = "24"
+
+[tasks.install]
+description = "Instala as dependências do front no host (para o editor e o tsc)"
+dir = "frontend"
+run = "npm install"
+
+[tasks.up]
+description = "Sobe banco, API e front no Docker. Front em localhost:5173"
+run = "docker compose up --build --renew-anon-volumes"
+
+[tasks.down]
+description = "Derruba os containers. Os dados do banco ficam"
+run = "docker compose down"
+
+[tasks.logs]
+description = "Acompanha o log da API (erros do PHP aparecem aqui)"
+run = "docker compose logs -f backend"
+
+[tasks."db:reset"]
+description = "Apaga o banco e recria com 01-schema.sql e 02-seed.sql, em segundo plano"
+run = ["docker compose down -v", "docker compose up -d --build --renew-anon-volumes --wait"]
+
+[tasks."db:psql"]
+description = "Abre o psql no banco do cinema"
+run = "docker compose exec db psql -U cine -d cine"
+
+[tasks.check]
+description = "Tipos e lint do front, sintaxe de todos os .php (o back só se o PHP estiver instalado)"
+run = [
+  "cd frontend && npx tsc -b && npx eslint .",
+  "command -v php >/dev/null && find backend/src backend/public -name '*.php' -exec php -l {} + | grep -v '^No syntax errors' || true",
+]
+
+[tasks.start]
+description = "UM comando para testar: sobe tudo no Docker, espera a API responder e mostra onde abrir"
+run = [
+  "docker compose up -d --build --renew-anon-volumes --wait",
+  "for i in $(seq 1 90); do curl -sf http://localhost:8000/api/saude >/dev/null && break; sleep 1; done",
+  "echo; echo 'Pronto.'; echo '  App:  http://localhost:5173'; echo '  API:  http://localhost:8000/api/saude'; echo '  Conta de teste: cliente@cine.dev / senha123'; echo '  Para parar: mise run down'",
+]
+
+[tasks.tudo]
+description = "Ordem completa: instala o front (install), confere o código (check) e sobe tudo (start)"
+run = [
+  { task = "install" },
+  { task = "check" },
+  { task = "start" },
+]

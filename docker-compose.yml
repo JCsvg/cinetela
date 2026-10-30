@@ -1,0 +1,51 @@
+# Banco, API e front. `mise run up` sobe tudo.
+# Front em http://localhost:5173, API em http://localhost:8000
+name: projeto-cinema
+
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: cine
+      POSTGRES_USER: cine
+      POSTGRES_PASSWORD: cine
+    volumes:
+      - dados-db:/var/lib/postgresql
+      - ./backend/database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U cine -d cine"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: cine
+      DB_USER: cine
+      DB_PASS: cine
+    volumes:
+      - ./backend:/app
+      - /app/vendor
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      API_URL: http://backend:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  dados-db:

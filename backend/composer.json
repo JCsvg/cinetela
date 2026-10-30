@@ -1,0 +1,20 @@
+{
+    "name": "joao/projeto-cinema",
+    "description": "API JSON do app de cinema",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Yahiro D Sakura"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cine\\": "src/"
+        }
+    }
+}

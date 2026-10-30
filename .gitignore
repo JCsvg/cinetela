@@ -1,0 +1,18 @@
+# Ignora tudo na raiz, exceto o que está liberado abaixo
+/*
+
+# mise, docker, back, front e README
+!/.gitignore
+!/.github/
+!/mise.toml
+!/docker-compose.yml
+!/README.md
+!/backend/
+!/frontend/
+!/capturas/
+
+# Dentro de backend/ e frontend/
+node_modules/
+vendor/
+dist/
+.env
